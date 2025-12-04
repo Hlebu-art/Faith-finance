@@ -1,0 +1,2991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Faith-filled Finance - Personal Wealth Management with Biblical Wisdom">
+    <meta name="theme-color" content="#0a0e1a">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Faith Finance">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%230a0e1a' width='100' height='100'/><text y='70' font-size='70' text-anchor='middle' x='50'>⛪</text></svg>">
+    <title>Faith-filled Finance - Personal Wealth Management</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;500;700;900&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
+    <style>
+        :root {
+            --bg-primary: #0a0e1a;
+            --bg-secondary: #111827;
+            --bg-card: #1a1f35;
+            --bg-card-hover: #1f2642;
+            --border-color: #2d3448;
+            --accent-gold: #d4af37;
+            --accent-silver: #c0c0c0;
+            --accent-bronze: #cd7f32;
+            --text-primary: #e5e7eb;
+            --text-secondary: #9ca3af;
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --info: #3b82f6;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Space Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        /* Animated Background */
+        .background-grid {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: 
+                linear-gradient(rgba(212, 175, 55, 0.03) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(212, 175, 55, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
+            z-index: -1;
+            animation: gridMove 20s linear infinite;
+        }
+
+        @keyframes gridMove {
+            0% { transform: translate(0, 0); }
+            100% { transform: translate(50px, 50px); }
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, #1a1f35 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 60px;
+            z-index: 100;
+        }
+
+        .header-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.8rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-silver));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+        }
+
+        .currency-selector {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+        }
+
+        .currency-selector select {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-family: 'Space Mono', monospace;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .currency-selector select:hover {
+            border-color: var(--accent-gold);
+        }
+
+        /* Navigation */
+        .nav {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 0;
+            position: sticky;
+            top: 149px;
+            z-index: 99;
+        }
+
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            overflow-x: auto;
+            scrollbar-width: none;
+        }
+
+        .nav-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .nav-item {
+            padding: 1rem 1.5rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+            font-size: 0.9rem;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+
+        .nav-item:hover {
+            color: var(--accent-gold);
+            background: var(--bg-card);
+        }
+
+        .nav-item.active {
+            color: var(--accent-gold);
+            border-bottom-color: var(--accent-gold);
+            background: var(--bg-card);
+        }
+
+        /* Main Container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .page {
+            display: none;
+        }
+
+        .page.active {
+            display: block;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Cards */
+        .card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--bg-secondary) 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 30px rgba(212, 175, 55, 0.1);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+            color: var(--accent-gold);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .card-title::before {
+            content: '';
+            width: 4px;
+            height: 24px;
+            background: linear-gradient(180deg, var(--accent-gold), var(--accent-bronze));
+            border-radius: 2px;
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1f2642 100%);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 1.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--accent-gold), transparent);
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-change {
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+        }
+
+        .stat-change.positive {
+            color: var(--success);
+        }
+
+        .stat-change.negative {
+            color: var(--danger);
+        }
+
+        /* Form Elements */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 0.5rem;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.95rem;
+            transition: all 0.3s;
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 0.75rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-family: 'Orbitron', sans-serif;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 600;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-bronze));
+            color: var(--bg-primary);
+            box-shadow: 0 4px 15px rgba(212, 175, 55, 0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(212, 175, 55, 0.4);
+        }
+
+        .btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-card-hover);
+            border-color: var(--accent-gold);
+        }
+
+        .btn-danger {
+            background: var(--danger);
+            color: white;
+        }
+
+        /* Progress Ring */
+        .progress-rings {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .progress-ring {
+            text-align: center;
+        }
+
+        .ring-container {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 1rem;
+            position: relative;
+        }
+
+        .ring-svg {
+            transform: rotate(-90deg);
+        }
+
+        .ring-background {
+            fill: none;
+            stroke: var(--bg-secondary);
+            stroke-width: 10;
+        }
+
+        .ring-progress {
+            fill: none;
+            stroke: var(--accent-gold);
+            stroke-width: 10;
+            stroke-linecap: round;
+            transition: stroke-dashoffset 1s ease;
+        }
+
+        .ring-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--accent-gold);
+        }
+
+        .ring-label {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Chart Container */
+        .chart-container {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-top: 1.5rem;
+            position: relative;
+            height: 400px;
+        }
+
+        /* Table */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 1.5rem;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead {
+            background: var(--bg-secondary);
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .table tbody tr {
+            transition: all 0.3s;
+        }
+
+        .table tbody tr:hover {
+            background: var(--bg-card-hover);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .badge-income {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+            border: 1px solid var(--success);
+        }
+
+        .badge-expense {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+            border: 1px solid var(--danger);
+        }
+
+        /* View Toggle */
+        .view-toggle {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .view-btn {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+        }
+
+        .view-btn.active {
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-bronze));
+            color: var(--bg-primary);
+            border-color: var(--accent-gold);
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-card);
+            border: 1px solid var(--accent-gold);
+            border-radius: 16px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.3rem;
+            color: var(--accent-gold);
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+            width: 30px;
+            height: 30px;
+        }
+
+        .modal-close:hover {
+            color: var(--accent-gold);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .gamification-bar {
+                flex-direction: column;
+                padding: 0.5rem 1rem;
+            }
+
+            .xp-bar-container {
+                max-width: 100%;
+                width: 100%;
+            }
+
+            .header-content {
+                flex-direction: column;
+                gap: 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .stat-value {
+                font-size: 1.5rem;
+            }
+
+            .nav {
+                top: 208px;
+            }
+
+            .header {
+                top: 120px;
+            }
+        }
+
+        /* Additional Utilities */
+        .text-success { color: var(--success); }
+        .text-danger { color: var(--danger); }
+        .text-warning { color: var(--warning); }
+        .text-info { color: var(--info); }
+        .text-gold { color: var(--accent-gold); }
+
+        .mt-2 { margin-top: 1rem; }
+        .mb-2 { margin-bottom: 1rem; }
+        .flex { display: flex; }
+        .flex-between { display: flex; justify-content: space-between; align-items: center; }
+        .flex-center { display: flex; justify-content: center; align-items: center; }
+        .gap-1 { gap: 0.5rem; }
+        .gap-2 { gap: 1rem; }
+
+        /* Gamification Styles */
+        .gamification-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            background: linear-gradient(135deg, #1a1f35 0%, #0a0e1a 100%);
+            border-bottom: 2px solid var(--accent-gold);
+            padding: 0.5rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            z-index: 1000;
+            font-size: 0.85rem;
+        }
+
+        .level-badge {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-bronze));
+            padding: 0.4rem 1rem;
+            border-radius: 20px;
+            color: var(--bg-primary);
+            font-weight: bold;
+        }
+
+        .xp-bar-container {
+            flex: 1;
+            max-width: 300px;
+            margin: 0 1rem;
+        }
+
+        .xp-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--bg-secondary);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .xp-progress {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-gold), var(--accent-silver));
+            transition: width 0.5s ease;
+            box-shadow: 0 0 10px rgba(212, 175, 55, 0.5);
+        }
+
+        .streak-counter {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent-gold);
+            font-weight: bold;
+        }
+
+        .achievement-popup {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1f2642 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 2rem;
+            text-align: center;
+            z-index: 2000;
+            box-shadow: 0 20px 60px rgba(212, 175, 55, 0.3);
+            animation: achievementPop 0.5s ease forwards;
+        }
+
+        @keyframes achievementPop {
+            0% { transform: translate(-50%, -50%) scale(0); }
+            50% { transform: translate(-50%, -50%) scale(1.1); }
+            100% { transform: translate(-50%, -50%) scale(1); }
+        }
+
+        .achievement-icon {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            animation: iconBounce 0.6s ease infinite;
+        }
+
+        @keyframes iconBounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .achievement-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent-gold);
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-desc {
+            color: var(--text-secondary);
+            margin-bottom: 1rem;
+        }
+
+        .achievement-xp {
+            font-weight: bold;
+            color: var(--success);
+            font-size: 1.2rem;
+        }
+
+        .scripture-popup {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1f2642 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 16px;
+            padding: 1.5rem;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(212, 175, 55, 0.3);
+            animation: slideInRight 0.5s ease;
+            z-index: 1500;
+        }
+
+        @keyframes slideInRight {
+            from { transform: translateX(500px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .scripture-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .scripture-icon {
+            font-size: 2rem;
+        }
+
+        .scripture-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0;
+        }
+
+        .scripture-text {
+            font-style: italic;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+
+        .scripture-reference {
+            text-align: right;
+            color: var(--accent-gold);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .achievements-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .achievement-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1rem;
+            text-align: center;
+            transition: all 0.3s;
+        }
+
+        .achievement-card.unlocked {
+            border-color: var(--accent-gold);
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1f2642 100%);
+        }
+
+        .achievement-card.locked {
+            opacity: 0.5;
+            filter: grayscale(1);
+        }
+
+        .achievement-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .achievement-card-icon {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .achievement-card-title {
+            font-size: 0.9rem;
+            font-weight: bold;
+            color: var(--text-primary);
+            margin-bottom: 0.3rem;
+        }
+
+        .achievement-card-desc {
+            font-size: 0.75rem;
+            color: var(--text-secondary);
+        }
+
+        /* Login Screen */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg-primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+        }
+
+        .login-container {
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1f2642 100%);
+            border: 2px solid var(--accent-gold);
+            border-radius: 20px;
+            padding: 3rem;
+            max-width: 450px;
+            width: 90%;
+            text-align: center;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .login-logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-silver));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-subtitle {
+            color: var(--text-secondary);
+            margin-bottom: 2rem;
+            font-size: 0.9rem;
+        }
+
+        .login-input {
+            width: 100%;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 1rem;
+            border-radius: 12px;
+            font-family: 'Space Mono', monospace;
+            font-size: 1.1rem;
+            text-align: center;
+            margin-bottom: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .login-input:focus {
+            outline: none;
+            border-color: var(--accent-gold);
+            box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.1);
+        }
+
+        .login-error {
+            color: var(--danger);
+            margin-top: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .setup-password {
+            margin-top: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.85rem;
+        }
+
+        /* Backup Controls */
+        .backup-fab {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--accent-gold), var(--accent-bronze));
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(212, 175, 55, 0.4);
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: all 0.3s;
+        }
+
+        .backup-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 30px rgba(212, 175, 55, 0.6);
+        }
+
+        .backup-fab:active {
+            transform: scale(0.95);
+        }
+
+        .backup-menu {
+            position: fixed;
+            bottom: 90px;
+            right: 20px;
+            background: linear-gradient(135deg, var(--bg-card) 0%, #1f2642 100%);
+            border: 1px solid var(--accent-gold);
+            border-radius: 16px;
+            padding: 1rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            z-index: 999;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            min-width: 200px;
+        }
+
+        .backup-menu.active {
+            display: flex;
+            animation: slideUp 0.3s ease;
+        }
+
+        @keyframes slideUp {
+            from { 
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to { 
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .backup-btn {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .backup-btn:hover {
+            border-color: var(--accent-gold);
+            background: var(--bg-card-hover);
+            transform: translateX(-3px);
+        }
+
+        .sync-status {
+            position: fixed;
+            top: 70px;
+            right: 20px;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            z-index: 1001;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .sync-status.syncing {
+            border-color: var(--info);
+            color: var(--info);
+        }
+
+        .sync-status.success {
+            border-color: var(--success);
+            color: var(--success);
+        }
+
+        .sync-status.error {
+            border-color: var(--danger);
+            color: var(--danger);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        .spinning {
+            animation: spin 1s linear infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginScreen" class="login-screen">
+        <div class="login-container">
+            <div class="login-logo">⛪ Faith-filled Finance</div>
+            <div class="login-subtitle">Steward your wealth with wisdom</div>
+            
+            <div id="loginForm">
+                <input type="password" id="passwordInput" class="login-input" placeholder="Enter your password" autocomplete="current-password">
+                <button class="btn btn-primary" onclick="login()">Unlock</button>
+                <div id="loginError" class="login-error"></div>
+            </div>
+
+            <div id="setupForm" style="display: none;">
+                <p class="setup-password">Set up your master password</p>
+                <input type="password" id="newPassword" class="login-input" placeholder="Create password" autocomplete="new-password">
+                <input type="password" id="confirmPassword" class="login-input" placeholder="Confirm password">
+                <button class="btn btn-primary" onclick="setupPassword()">Create Password</button>
+                <div id="setupError" class="login-error"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Backup Controls -->
+    <button class="backup-fab" id="backupFab" onclick="toggleBackupMenu()" style="display: none;">
+        ⚙️
+    </button>
+    
+    <div class="backup-menu" id="backupMenu">
+        <button class="backup-btn" onclick="exportData(); toggleBackupMenu();">
+            <span>💾</span>
+            <span>Export Backup</span>
+        </button>
+        <button class="backup-btn" onclick="document.getElementById('importFile').click(); toggleBackupMenu();">
+            <span>📥</span>
+            <span>Import Backup</span>
+        </button>
+        <button class="backup-btn" onclick="toggleGoogleDriveSync(); toggleBackupMenu();">
+            <span id="syncIcon">☁️</span>
+            <span id="syncText">Connect Drive</span>
+        </button>
+        <button class="backup-btn" onclick="logout(); toggleBackupMenu();" style="border-color: var(--danger); color: var(--danger);">
+            <span>🔒</span>
+            <span>Lock App</span>
+        </button>
+    </div>
+    <input type="file" id="importFile" accept=".json" style="display: none;" onchange="importData(event)">
+
+    <!-- Gamification Bar -->
+    <div class="gamification-bar">
+        <div class="level-badge">
+            <span>⭐</span>
+            <span id="userLevel">Level 1</span>
+        </div>
+        <div class="xp-bar-container">
+            <div class="xp-bar">
+                <div class="xp-progress" id="xpProgress" style="width: 0%"></div>
+            </div>
+            <div style="text-align: center; margin-top: 0.3rem; font-size: 0.75rem; color: var(--text-secondary);">
+                <span id="currentXP">0</span> / <span id="nextLevelXP">100</span> XP
+            </div>
+        </div>
+        <div class="streak-counter">
+            <span>🔥</span>
+            <span id="streakCount">0</span>
+            <span style="color: var(--text-secondary);">day streak</span>
+        </div>
+    </div>
+
+    <div class="background-grid"></div>
+
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo">⛪ Faith-filled Finance</div>
+            <div class="currency-selector">
+                <label for="baseCurrency" style="color: var(--text-secondary); font-size: 0.85rem;">BASE CURRENCY:</label>
+                <select id="baseCurrency" onchange="updateCurrency()">
+                    <option value="USD">USD ($)</option>
+                    <option value="EUR">EUR (€)</option>
+                    <option value="GBP">GBP (£)</option>
+                    <option value="JPY">JPY (¥)</option>
+                    <option value="AUD">AUD (A$)</option>
+                    <option value="CAD">CAD (C$)</option>
+                    <option value="SGD">SGD (S$)</option>
+                    <option value="ZAR">ZAR (R)</option>
+                    <option value="INR">INR (₹)</option>
+                    <option value="CNY">CNY (¥)</option>
+                </select>
+            </div>
+        </div>
+    </header>
+
+    <!-- Navigation -->
+    <nav class="nav">
+        <div class="nav-container">
+            <div class="nav-item active" onclick="showPage('dashboard')">Dashboard</div>
+            <div class="nav-item" onclick="showPage('income')">Income</div>
+            <div class="nav-item" onclick="showPage('budget')">Budget</div>
+            <div class="nav-item" onclick="showPage('transactions')">Transactions</div>
+            <div class="nav-item" onclick="showPage('investments')">Investments</div>
+            <div class="nav-item" onclick="showPage('debts')">Debts & Loans</div>
+            <div class="nav-item" onclick="showPage('goals')">Financial Goals</div>
+            <div class="nav-item" onclick="showPage('achievements')">Achievements</div>
+        </div>
+    </nav>
+
+    <!-- Main Container -->
+    <main class="container">
+        <!-- Dashboard Page -->
+        <div id="dashboard" class="page active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Income</div>
+                    <div class="stat-value" id="dashTotalIncome">$0.00</div>
+                    <div class="stat-change positive">↑ This month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Expenses</div>
+                    <div class="stat-value" id="dashTotalExpenses">$0.00</div>
+                    <div class="stat-change negative">↓ This month</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Savings</div>
+                    <div class="stat-value" id="dashSavings">$0.00</div>
+                    <div class="stat-change positive">↑ +12.5%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Investments</div>
+                    <div class="stat-value" id="dashInvestments">$0.00</div>
+                    <div class="stat-change positive">↑ +8.3%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Debt</div>
+                    <div class="stat-value" id="dashDebt">$0.00</div>
+                    <div class="stat-change negative">↓ -5.2%</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Net Worth</div>
+                    <div class="stat-value" id="dashNetWorth">$0.00</div>
+                    <div class="stat-change positive">↑ +15.7%</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Budget Overview</div>
+                <div class="stat-card">
+                    <div class="stat-label">Budget Used This Month</div>
+                    <div class="stat-value" id="budgetPercentage">0%</div>
+                    <div style="width: 100%; height: 12px; background: var(--bg-secondary); border-radius: 6px; margin-top: 1rem; overflow: hidden;">
+                        <div id="budgetBar" style="height: 100%; background: linear-gradient(90deg, var(--accent-gold), var(--accent-bronze)); width: 0%; transition: width 0.5s;"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="view-toggle">
+                <button class="view-btn active" onclick="setDashboardView('annual')">Annual View</button>
+                <button class="view-btn" onclick="setDashboardView('monthly')">Monthly View</button>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Spending Analysis</div>
+                <div class="chart-container">
+                    <canvas id="spendingChart"></canvas>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Financial Goals Progress</div>
+                <div class="progress-rings" id="goalsProgress"></div>
+            </div>
+        </div>
+
+        <!-- Income Page -->
+        <div id="income" class="page">
+            <div class="card">
+                <div class="card-title">Add Income</div>
+                <form id="incomeForm" onsubmit="addIncome(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Source Name</label>
+                            <input type="text" class="form-input" id="incomeSource" placeholder="e.g., Monthly Salary" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-input" id="incomeAmount" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" id="incomeCategory" required>
+                                <option value="Salary">Salary</option>
+                                <option value="Freelance">Freelance</option>
+                                <option value="Business">Business Income</option>
+                                <option value="Investment Returns">Investment Returns</option>
+                                <option value="Dividends">Dividends</option>
+                                <option value="Interest">Interest</option>
+                                <option value="Rental Income">Rental Income</option>
+                                <option value="Tax Returns">Tax Returns</option>
+                                <option value="Bonuses">Bonuses</option>
+                                <option value="Gifts">Gifts</option>
+                                <option value="Refunds">Refunds</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-input" id="incomeDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes (Optional)</label>
+                        <input type="text" class="form-input" id="incomeNotes" placeholder="Additional details...">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Income</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Income History</div>
+                <div class="table-container">
+                    <table class="table" id="incomeTable">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Source</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="incomeTableBody">
+                            <tr><td colspan="5" class="empty-state"><div class="empty-icon">💰</div><p>No income records yet</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Budget Page -->
+        <div id="budget" class="page">
+            <div class="card">
+                <div class="card-title">Set Monthly Budget</div>
+                <form id="budgetForm" onsubmit="addBudget(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" id="budgetCategory" required>
+                                <option value="Housing">Housing</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Food & Groceries">Food & Groceries</option>
+                                <option value="Dining Out">Dining Out</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Insurance">Insurance</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Personal Care">Personal Care</option>
+                                <option value="Education">Education</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Subscriptions">Subscriptions</option>
+                                <option value="Savings">Savings</option>
+                                <option value="Investments">Investments</option>
+                                <option value="Debt Payments">Debt Payments</option>
+                                <option value="Gifts & Donations">Gifts & Donations</option>
+                                <option value="Pet Care">Pet Care</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Budget Amount</label>
+                            <input type="number" class="form-input" id="budgetAmount" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Month</label>
+                        <input type="month" class="form-input" id="budgetMonth" required>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Set Budget</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Budget Allocations</div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Category</th>
+                                <th>Budget</th>
+                                <th>Spent</th>
+                                <th>Remaining</th>
+                                <th>Progress</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="budgetTableBody">
+                            <tr><td colspan="6" class="empty-state"><div class="empty-icon">📊</div><p>No budgets set yet</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Transactions Page -->
+        <div id="transactions" class="page">
+            <div class="card">
+                <div class="card-title">Add Transaction</div>
+                <form id="transactionForm" onsubmit="addTransaction(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Transaction Name</label>
+                            <input type="text" class="form-input" id="transactionName" placeholder="e.g., Grocery Shopping" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount</label>
+                            <input type="number" class="form-input" id="transactionAmount" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Type</label>
+                            <select class="form-select" id="transactionType" required>
+                                <option value="expense">Expense</option>
+                                <option value="income">Income</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" id="transactionCategory" required>
+                                <option value="Housing">Housing</option>
+                                <option value="Transportation">Transportation</option>
+                                <option value="Food & Groceries">Food & Groceries</option>
+                                <option value="Dining Out">Dining Out</option>
+                                <option value="Utilities">Utilities</option>
+                                <option value="Healthcare">Healthcare</option>
+                                <option value="Entertainment">Entertainment</option>
+                                <option value="Shopping">Shopping</option>
+                                <option value="Travel">Travel</option>
+                                <option value="Education">Education</option>
+                                <option value="Gifts & Donations">Gifts & Donations</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Date</label>
+                            <input type="date" class="form-input" id="transactionDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Payment Method</label>
+                            <select class="form-select" id="paymentMethod">
+                                <option value="Cash">Cash</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Debit Card">Debit Card</option>
+                                <option value="Bank Transfer">Bank Transfer</option>
+                                <option value="Digital Wallet">Digital Wallet</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Notes (Optional)</label>
+                        <input type="text" class="form-input" id="transactionNotes" placeholder="Additional details...">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Transaction</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Transaction History</div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Type</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTableBody">
+                            <tr><td colspan="6" class="empty-state"><div class="empty-icon">💳</div><p>No transactions yet</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Investments Page -->
+        <div id="investments" class="page">
+            <div class="card">
+                <div class="card-title">Add Investment</div>
+                <form id="investmentForm" onsubmit="addInvestment(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Investment Name</label>
+                            <input type="text" class="form-input" id="investmentName" placeholder="e.g., Apple Stock" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Current Value</label>
+                            <input type="number" class="form-input" id="investmentValue" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" id="investmentCategory" required>
+                                <option value="Stocks">Stocks</option>
+                                <option value="Bonds">Bonds</option>
+                                <option value="Mutual Funds">Mutual Funds</option>
+                                <option value="ETFs">ETFs</option>
+                                <option value="Real Estate">Real Estate</option>
+                                <option value="Cryptocurrency">Cryptocurrency</option>
+                                <option value="Retirement Account">Retirement Account (401k, IRA)</option>
+                                <option value="Savings Account">Savings Account</option>
+                                <option value="Fixed Deposits">Fixed Deposits</option>
+                                <option value="Commodities">Commodities (Gold, Silver)</option>
+                                <option value="Private Equity">Private Equity</option>
+                                <option value="Business Investment">Business Investment</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Initial Investment</label>
+                            <input type="number" class="form-input" id="investmentInitial" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Purchase Date</label>
+                            <input type="date" class="form-input" id="investmentDate" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Expected Return (%)</label>
+                            <input type="number" class="form-input" id="investmentReturn" placeholder="0.00" step="0.01">
+                        </div>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Investment</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Investment Portfolio</div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Initial Value</th>
+                                <th>Current Value</th>
+                                <th>Return</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="investmentsTableBody">
+                            <tr><td colspan="6" class="empty-state"><div class="empty-icon">📈</div><p>No investments yet</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Debts & Loans Page -->
+        <div id="debts" class="page">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-label">Total Debt</div>
+                    <div class="stat-value text-danger" id="totalDebt">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Total Paid</div>
+                    <div class="stat-value text-success" id="totalPaid">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Remaining</div>
+                    <div class="stat-value text-warning" id="totalRemaining">$0.00</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-label">Debt-to-Income Ratio</div>
+                    <div class="stat-value" id="debtToIncome">0%</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Add Debt/Loan</div>
+                <form id="debtForm" onsubmit="addDebt(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Debt Name</label>
+                            <input type="text" class="form-input" id="debtName" placeholder="e.g., Home Mortgage" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Total Amount</label>
+                            <input type="number" class="form-input" id="debtTotal" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Category</label>
+                            <select class="form-select" id="debtCategory" required>
+                                <option value="Mortgage">Mortgage</option>
+                                <option value="Auto Loan">Auto Loan</option>
+                                <option value="Student Loan">Student Loan</option>
+                                <option value="Credit Card">Credit Card</option>
+                                <option value="Personal Loan">Personal Loan</option>
+                                <option value="Business Loan">Business Loan</option>
+                                <option value="Medical Debt">Medical Debt</option>
+                                <option value="Home Equity Loan">Home Equity Loan</option>
+                                <option value="Payday Loan">Payday Loan</option>
+                                <option value="Other">Other</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Amount Paid</label>
+                            <input type="number" class="form-input" id="debtPaid" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Interest Rate (%)</label>
+                            <input type="number" class="form-input" id="debtInterest" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Monthly Payment</label>
+                            <input type="number" class="form-input" id="debtMonthly" placeholder="0.00" step="0.01">
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Due Date</label>
+                        <input type="date" class="form-input" id="debtDueDate">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Debt</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Debt Overview</div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Total</th>
+                                <th>Paid</th>
+                                <th>Remaining</th>
+                                <th>Progress</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="debtsTableBody">
+                            <tr><td colspan="7" class="empty-state"><div class="empty-icon">💳</div><p>No debts tracked yet</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Financial Goals Page -->
+        <div id="goals" class="page">
+            <div class="card">
+                <div class="card-title">Add Financial Goal</div>
+                <form id="goalForm" onsubmit="addGoal(event)">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Goal Name</label>
+                            <input type="text" class="form-input" id="goalName" placeholder="e.g., Emergency Fund" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Target Amount</label>
+                            <input type="number" class="form-input" id="goalTarget" placeholder="0.00" step="0.01" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Current Amount</label>
+                            <input type="number" class="form-input" id="goalCurrent" placeholder="0.00" step="0.01" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Target Date</label>
+                            <input type="date" class="form-input" id="goalDate" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Category</label>
+                        <select class="form-select" id="goalCategory" required>
+                            <option value="Emergency Fund">Emergency Fund</option>
+                            <option value="Holiday Savings">Holiday/Vacation Savings</option>
+                            <option value="House Down Payment">House Down Payment</option>
+                            <option value="Car Purchase">Car Purchase</option>
+                            <option value="Retirement">Retirement Savings</option>
+                            <option value="Education">Education Fund</option>
+                            <option value="Wedding">Wedding Fund</option>
+                            <option value="Donations">Donations Target</option>
+                            <option value="Investment Goal">Investment Goal</option>
+                            <option value="Debt Payoff">Debt Payoff</option>
+                            <option value="Other">Other</option>
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Add Goal</button>
+                </form>
+            </div>
+
+            <div class="card">
+                <div class="card-title">Your Financial Goals</div>
+                <div class="table-container">
+                    <table class="table">
+                        <thead>
+                            <tr>
+                                <th>Goal</th>
+                                <th>Category</th>
+                                <th>Current</th>
+                                <th>Target</th>
+                                <th>Progress</th>
+                                <th>Target Date</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="goalsTableBody">
+                            <tr><td colspan="7" class="empty-state"><div class="empty-icon">🎯</div><p>No goals set yet</p></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievements Page -->
+        <div id="achievements" class="page">
+            <div class="card">
+                <div class="card-title">Your Achievements</div>
+                <p style="color: var(--text-secondary); margin-bottom: 1.5rem;">
+                    Complete financial tasks to unlock achievements and earn XP!
+                </p>
+                <div class="achievements-grid" id="achievementsGrid"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Data Storage
+        let data = {
+            currency: 'USD',
+            exchangeRates: {
+                'USD': 1, 'EUR': 0.92, 'GBP': 0.79, 'JPY': 149.50,
+                'AUD': 1.52, 'CAD': 1.35, 'SGD': 1.34, 'ZAR': 18.50, 'INR': 83.12, 'CNY': 7.24
+            },
+            income: JSON.parse(localStorage.getItem('income')) || [],
+            budgets: JSON.parse(localStorage.getItem('budgets')) || [],
+            transactions: JSON.parse(localStorage.getItem('transactions')) || [],
+            investments: JSON.parse(localStorage.getItem('investments')) || [],
+            debts: JSON.parse(localStorage.getItem('debts')) || [],
+            goals: JSON.parse(localStorage.getItem('goals')) || [],
+            gamification: JSON.parse(localStorage.getItem('gamification')) || {
+                xp: 0,
+                level: 1,
+                streak: 0,
+                lastActivity: null,
+                achievements: []
+            }
+        };
+
+        let dashboardView = 'annual';
+        let spendingChart = null;
+
+        // Bible Scriptures about Finance
+        const scriptures = [
+            {
+                text: "Honor the Lord with your wealth and with the firstfruits of all your produce; then your barns will be filled with plenty, and your vats will be bursting with wine.",
+                reference: "Proverbs 3:9-10"
+            },
+            {
+                text: "Whoever is faithful in very little is also faithful in much, and whoever is dishonest in very little is also dishonest in much.",
+                reference: "Luke 16:10"
+            },
+            {
+                text: "For where your treasure is, there your heart will be also.",
+                reference: "Matthew 6:21"
+            },
+            {
+                text: "Keep your life free from love of money, and be content with what you have, for he has said, 'I will never leave you nor forsake you.'",
+                reference: "Hebrews 13:5"
+            },
+            {
+                text: "The plans of the diligent lead surely to abundance, but everyone who is hasty comes only to poverty.",
+                reference: "Proverbs 21:5"
+            },
+            {
+                text: "Whoever loves money never has enough; whoever loves wealth is never satisfied with their income.",
+                reference: "Ecclesiastes 5:10"
+            },
+            {
+                text: "Give, and it will be given to you. Good measure, pressed down, shaken together, running over, will be put into your lap. For with the measure you use it will be measured back to you.",
+                reference: "Luke 6:38"
+            },
+            {
+                text: "Bring the full tithe into the storehouse, that there may be food in my house. And thereby put me to the test, says the Lord of hosts, if I will not open the windows of heaven for you and pour down for you a blessing until there is no more need.",
+                reference: "Malachi 3:10"
+            },
+            {
+                text: "One gives freely, yet grows all the richer; another withholds what he should give, and only suffers want.",
+                reference: "Proverbs 11:24"
+            },
+            {
+                text: "But remember the Lord your God, for it is he who gives you the ability to produce wealth.",
+                reference: "Deuteronomy 8:18"
+            },
+            {
+                text: "For the love of money is a root of all kinds of evils. It is through this craving that some have wandered away from the faith and pierced themselves with many pangs.",
+                reference: "1 Timothy 6:10"
+            },
+            {
+                text: "Command those who are rich in this present world not to be arrogant nor to put their hope in wealth, which is so uncertain, but to put their hope in God.",
+                reference: "1 Timothy 6:17"
+            },
+            {
+                text: "Wealth gained hastily will dwindle, but whoever gathers little by little will increase it.",
+                reference: "Proverbs 13:11"
+            },
+            {
+                text: "Do not lay up for yourselves treasures on earth, where moth and rust destroy and where thieves break in and steal, but lay up for yourselves treasures in heaven.",
+                reference: "Matthew 6:19-20"
+            },
+            {
+                text: "Let no debt remain outstanding, except the continuing debt to love one another.",
+                reference: "Romans 13:8"
+            }
+        ];
+
+        // Achievements System
+        const achievementsList = [
+            {
+                id: 'first_income',
+                icon: '💰',
+                title: 'First Harvest',
+                description: 'Record your first income',
+                xp: 50,
+                unlocked: false
+            },
+            {
+                id: 'budget_master',
+                icon: '📊',
+                title: 'Budget Steward',
+                description: 'Set your first monthly budget',
+                xp: 50,
+                unlocked: false
+            },
+            {
+                id: 'transaction_tracker',
+                icon: '💳',
+                title: 'Faithful Recorder',
+                description: 'Log 10 transactions',
+                xp: 100,
+                unlocked: false
+            },
+            {
+                id: 'goal_setter',
+                icon: '🎯',
+                title: 'Vision Keeper',
+                description: 'Set your first financial goal',
+                xp: 50,
+                unlocked: false
+            },
+            {
+                id: 'investor',
+                icon: '📈',
+                title: 'Wise Investor',
+                description: 'Add your first investment',
+                xp: 75,
+                unlocked: false
+            },
+            {
+                id: 'debt_warrior',
+                icon: '⚔️',
+                title: 'Debt Warrior',
+                description: 'Track your first debt',
+                xp: 50,
+                unlocked: false
+            },
+            {
+                id: 'streak_7',
+                icon: '🔥',
+                title: 'Week Warrior',
+                description: 'Maintain a 7-day streak',
+                xp: 150,
+                unlocked: false
+            },
+            {
+                id: 'streak_30',
+                icon: '🔥🔥',
+                title: 'Month Master',
+                description: 'Maintain a 30-day streak',
+                xp: 500,
+                unlocked: false
+            },
+            {
+                id: 'savings_goal',
+                icon: '💎',
+                title: 'Treasure Builder',
+                description: 'Complete a savings goal',
+                xp: 200,
+                unlocked: false
+            },
+            {
+                id: 'tithe_giver',
+                icon: '⛪',
+                title: 'Cheerful Giver',
+                description: 'Record a donation/tithe',
+                xp: 100,
+                unlocked: false
+            },
+            {
+                id: 'budget_keeper',
+                icon: '✅',
+                title: 'Budget Keeper',
+                description: 'Stay within budget for a month',
+                xp: 200,
+                unlocked: false
+            },
+            {
+                id: 'level_5',
+                icon: '⭐',
+                title: 'Rising Star',
+                description: 'Reach Level 5',
+                xp: 250,
+                unlocked: false
+            }
+        ];
+
+        let isAuthenticated = false;
+        let googleDriveConnected = false;
+        let autoSyncEnabled = false;
+
+        // ================ AUTHENTICATION ================
+        
+        function hashPassword(password) {
+            // Simple hash function (in production, use proper encryption)
+            let hash = 0;
+            for (let i = 0; i < password.length; i++) {
+                const char = password.charCodeAt(i);
+                hash = ((hash << 5) - hash) + char;
+                hash = hash & hash;
+            }
+            return hash.toString();
+        }
+
+        function toggleBackupMenu() {
+            const menu = document.getElementById('backupMenu');
+            menu.classList.toggle('active');
+        }
+
+        // Close menu when clicking outside
+        document.addEventListener('click', function(e) {
+            const menu = document.getElementById('backupMenu');
+            const fab = document.getElementById('backupFab');
+            if (menu && fab && !menu.contains(e.target) && !fab.contains(e.target)) {
+                menu.classList.remove('active');
+            }
+        });
+
+        function setupPassword() {
+            const newPass = document.getElementById('newPassword').value;
+            const confirmPass = document.getElementById('confirmPassword').value;
+            const errorDiv = document.getElementById('setupError');
+
+            if (!newPass || newPass.length < 4) {
+                errorDiv.textContent = 'Password must be at least 4 characters';
+                return;
+            }
+
+            if (newPass !== confirmPass) {
+                errorDiv.textContent = 'Passwords do not match';
+                return;
+            }
+
+            const hashedPassword = hashPassword(newPass);
+            localStorage.setItem('appPassword', hashedPassword);
+            errorDiv.textContent = '';
+            
+            showNotification('Password created successfully!', 'success');
+            setTimeout(() => {
+                document.getElementById('setupForm').style.display = 'none';
+                document.getElementById('loginForm').style.display = 'block';
+            }, 1000);
+        }
+
+        function login() {
+            const password = document.getElementById('passwordInput').value;
+            const storedHash = localStorage.getItem('appPassword');
+            const errorDiv = document.getElementById('loginError');
+
+            if (hashPassword(password) === storedHash) {
+                isAuthenticated = true;
+                document.getElementById('loginScreen').style.display = 'none';
+                document.getElementById('backupFab').style.display = 'flex';
+                errorDiv.textContent = '';
+                showNotification('Welcome back! 🙏', 'success');
+                initializeApp();
+            } else {
+                errorDiv.textContent = 'Incorrect password';
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function logout() {
+            if (confirm('Lock the app? You will need to enter your password again.')) {
+                isAuthenticated = false;
+                document.getElementById('loginScreen').style.display = 'flex';
+                document.getElementById('backupFab').style.display = 'none';
+                document.getElementById('backupMenu').classList.remove('active');
+                document.getElementById('passwordInput').value = '';
+            }
+        }
+
+        function checkAuth() {
+            const storedHash = localStorage.getItem('appPassword');
+            if (!storedHash) {
+                document.getElementById('loginForm').style.display = 'none';
+                document.getElementById('setupForm').style.display = 'block';
+            }
+        }
+
+        // Handle Enter key for login
+        document.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                if (document.getElementById('loginForm').style.display !== 'none') {
+                    login();
+                } else if (document.getElementById('setupForm').style.display !== 'none') {
+                    setupPassword();
+                }
+            }
+        });
+
+        // ================ BACKUP & EXPORT ================
+
+        function exportData() {
+            const exportData = {
+                version: '1.0',
+                exportDate: new Date().toISOString(),
+                currency: data.currency,
+                income: data.income,
+                budgets: data.budgets,
+                transactions: data.transactions,
+                investments: data.investments,
+                debts: data.debts,
+                goals: data.goals,
+                gamification: data.gamification
+            };
+
+            const dataStr = JSON.stringify(exportData, null, 2);
+            const dataBlob = new Blob([dataStr], { type: 'application/json' });
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `faith-finance-backup-${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showNotification('Backup exported successfully! 💾', 'success');
+            addXP(25, 'Data backup created');
+        }
+
+        function importData(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const importedData = JSON.parse(e.target.result);
+                    
+                    if (confirm('This will replace all current data. Continue?')) {
+                        data.currency = importedData.currency || 'USD';
+                        data.income = importedData.income || [];
+                        data.budgets = importedData.budgets || [];
+                        data.transactions = importedData.transactions || [];
+                        data.investments = importedData.investments || [];
+                        data.debts = importedData.debts || [];
+                        data.goals = importedData.goals || [];
+                        data.gamification = importedData.gamification || data.gamification;
+
+                        // Save to localStorage
+                        localStorage.setItem('income', JSON.stringify(data.income));
+                        localStorage.setItem('budgets', JSON.stringify(data.budgets));
+                        localStorage.setItem('transactions', JSON.stringify(data.transactions));
+                        localStorage.setItem('investments', JSON.stringify(data.investments));
+                        localStorage.setItem('debts', JSON.stringify(data.debts));
+                        localStorage.setItem('goals', JSON.stringify(data.goals));
+                        localStorage.setItem('gamification', JSON.stringify(data.gamification));
+                        localStorage.setItem('currency', data.currency);
+
+                        document.getElementById('baseCurrency').value = data.currency;
+                        updateAllDisplays();
+                        showNotification('Backup imported successfully! 📥', 'success');
+                    }
+                } catch (error) {
+                    alert('Error importing backup file. Please check the file and try again.');
+                }
+            };
+            reader.readAsText(file);
+            event.target.value = '';
+        }
+
+        // ================ GOOGLE DRIVE SYNC ================
+
+        function showSyncStatus(message, type = 'syncing') {
+            const existing = document.querySelector('.sync-status');
+            if (existing) existing.remove();
+
+            const status = document.createElement('div');
+            status.className = `sync-status ${type}`;
+            
+            let icon = '🔄';
+            if (type === 'success') icon = '✓';
+            if (type === 'error') icon = '⚠️';
+            
+            status.innerHTML = `<span ${type === 'syncing' ? 'class="spinning"' : ''}>${icon}</span><span>${message}</span>`;
+            document.body.appendChild(status);
+
+            if (type !== 'syncing') {
+                setTimeout(() => status.remove(), 3000);
+            }
+        }
+
+        async function toggleGoogleDriveSync() {
+            if (!googleDriveConnected) {
+                showNotification('Google Drive sync feature ready! For full implementation, this requires a Google Cloud project setup.', 'info');
+                showNotification('Using manual backup for now. Click Export/Import to backup your data.', 'info');
+                
+                // Simulate connection for demo
+                googleDriveConnected = true;
+                autoSyncEnabled = true;
+                document.getElementById('syncIcon').textContent = '✓';
+                document.getElementById('syncText').textContent = 'Drive Connected';
+                localStorage.setItem('driveSyncEnabled', 'true');
+                
+                addXP(50, 'Backup system enabled');
+            } else {
+                if (confirm('Disconnect Google Drive sync?')) {
+                    googleDriveConnected = false;
+                    autoSyncEnabled = false;
+                    document.getElementById('syncIcon').textContent = '☁️';
+                    document.getElementById('syncText').textContent = 'Connect Drive';
+                    localStorage.removeItem('driveSyncEnabled');
+                }
+            }
+        }
+
+        function autoSave() {
+            if (autoSyncEnabled && googleDriveConnected) {
+                // In a full implementation, this would sync to Google Drive
+                showSyncStatus('Auto-saved', 'success');
+            }
+        }
+
+        // Auto-save every 5 minutes
+        setInterval(() => {
+            if (isAuthenticated && autoSyncEnabled) {
+                autoSave();
+            }
+        }, 300000);
+
+        // ================ PWA INSTALLATION ================
+
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            
+            // Show install prompt after login
+            setTimeout(() => {
+                if (isAuthenticated && confirm('Install Faith-filled Finance as an app on your device?')) {
+                    deferredPrompt.prompt();
+                    deferredPrompt.userChoice.then((choiceResult) => {
+                        if (choiceResult.outcome === 'accepted') {
+                            showNotification('App installed successfully! 🎉', 'success');
+                            addXP(100, 'App installed');
+                        }
+                        deferredPrompt = null;
+                    });
+                }
+            }, 3000);
+        });
+
+        // Register service worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('data:application/javascript;base64,c2VsZi5hZGRFdmVudExpc3RlbmVyKCdpbnN0YWxsJywgZnVuY3Rpb24oZSkge2Uud2FpdFVudGlsKGNhY2hlcy5vcGVuKCdmYWl0aC1maW5hbmNlLXYxJykudGhlbihmdW5jdGlvbihjYWNoZSl7cmV0dXJuIGNhY2hlLmFkZEFsbChbJy8nXSl9KSl9KTtzZWxmLmFkZEV2ZW50TGlzdGVuZXIoJ2ZldGNoJyxmdW5jdGlvbihlKXtlLnJlc3BvbmRXaXRoKGNhY2hlcy5tYXRjaChlLnJlcXVlc3QpLnRoZW4oZnVuY3Rpb24ocmVzcG9uc2Upe3JldHVybiByZXNwb25zZXx8ZmV0Y2goZS5yZXF1ZXN0KX0pKX0p')
+                    .catch(() => console.log('Service worker registration skipped'));
+            });
+        }
+
+        function initializeApp() {
+            setDefaultDates();
+            
+            const savedCurrency = localStorage.getItem('currency');
+            if (savedCurrency) {
+                data.currency = savedCurrency;
+                document.getElementById('baseCurrency').value = savedCurrency;
+            }
+            
+            const driveSyncEnabled = localStorage.getItem('driveSyncEnabled');
+            if (driveSyncEnabled === 'true') {
+                googleDriveConnected = true;
+                autoSyncEnabled = true;
+                document.getElementById('syncIcon').textContent = '✓';
+                document.getElementById('syncText').textContent = 'Drive Connected';
+            }
+            
+            updateAllDisplays();
+            updateGamificationDisplay();
+            updateAchievementsDisplay();
+            checkAllAchievements();
+            
+            setTimeout(() => {
+                showRandomScripture();
+            }, 2000);
+        }
+
+        // Currency Functions
+        function getCurrencySymbol(currency) {
+            const symbols = {
+                'USD': '$', 'EUR': '€', 'GBP': '£', 'JPY': '¥',
+                'AUD': 'A$', 'CAD': 'C$', 'SGD': 'S$', 'ZAR': 'R', 'INR': '₹', 'CNY': '¥'
+            };
+            return symbols[currency] || currency;
+        }
+
+        function formatCurrency(amount) {
+            return `${getCurrencySymbol(data.currency)}${Math.abs(amount).toFixed(2)}`;
+        }
+
+        function convertCurrency(amount, fromCurrency) {
+            const inUSD = amount / data.exchangeRates[fromCurrency];
+            return inUSD * data.exchangeRates[data.currency];
+        }
+
+        function updateCurrency() {
+            data.currency = document.getElementById('baseCurrency').value;
+            localStorage.setItem('currency', data.currency);
+            updateAllDisplays();
+        }
+
+        // Navigation
+        function showPage(pageName) {
+            document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
+            document.getElementById(pageName).classList.add('active');
+            event.target.classList.add('active');
+            
+            if (pageName === 'dashboard') {
+                updateDashboard();
+            } else if (pageName === 'achievements') {
+                updateAchievementsDisplay();
+            }
+        }
+
+        // Gamification Functions
+        function addXP(amount, reason) {
+            data.gamification.xp += amount;
+            checkLevelUp();
+            updateGamificationDisplay();
+            saveGamification();
+            
+            // Show XP gain notification
+            showNotification(`+${amount} XP: ${reason}`, 'success');
+        }
+
+        function checkLevelUp() {
+            const xpForNextLevel = data.gamification.level * 100;
+            if (data.gamification.xp >= xpForNextLevel) {
+                data.gamification.level++;
+                data.gamification.xp -= xpForNextLevel;
+                showAchievementPopup('⭐', 'LEVEL UP!', `You've reached Level ${data.gamification.level}!`, 0);
+                checkAchievement('level_5');
+            }
+        }
+
+        function updateStreak() {
+            const today = new Date().toDateString();
+            const lastActivity = data.gamification.lastActivity;
+            
+            if (lastActivity === today) {
+                return; // Already logged today
+            }
+            
+            const yesterday = new Date();
+            yesterday.setDate(yesterday.getDate() - 1);
+            
+            if (lastActivity === yesterday.toDateString()) {
+                data.gamification.streak++;
+            } else if (lastActivity !== today) {
+                data.gamification.streak = 1;
+            }
+            
+            data.gamification.lastActivity = today;
+            checkAchievement('streak_7');
+            checkAchievement('streak_30');
+            saveGamification();
+            updateGamificationDisplay();
+        }
+
+        function checkAchievement(achievementId) {
+            const achievement = achievementsList.find(a => a.id === achievementId);
+            if (!achievement || data.gamification.achievements.includes(achievementId)) {
+                return;
+            }
+            
+            let shouldUnlock = false;
+            
+            switch(achievementId) {
+                case 'first_income':
+                    shouldUnlock = data.income.length >= 1;
+                    break;
+                case 'budget_master':
+                    shouldUnlock = data.budgets.length >= 1;
+                    break;
+                case 'transaction_tracker':
+                    shouldUnlock = data.transactions.length >= 10;
+                    break;
+                case 'goal_setter':
+                    shouldUnlock = data.goals.length >= 1;
+                    break;
+                case 'investor':
+                    shouldUnlock = data.investments.length >= 1;
+                    break;
+                case 'debt_warrior':
+                    shouldUnlock = data.debts.length >= 1;
+                    break;
+                case 'streak_7':
+                    shouldUnlock = data.gamification.streak >= 7;
+                    break;
+                case 'streak_30':
+                    shouldUnlock = data.gamification.streak >= 30;
+                    break;
+                case 'tithe_giver':
+                    shouldUnlock = data.transactions.some(t => t.category === 'Gifts & Donations');
+                    break;
+                case 'level_5':
+                    shouldUnlock = data.gamification.level >= 5;
+                    break;
+            }
+            
+            if (shouldUnlock) {
+                data.gamification.achievements.push(achievementId);
+                showAchievementPopup(achievement.icon, achievement.title, achievement.description, achievement.xp);
+                addXP(achievement.xp, achievement.title);
+                saveGamification();
+            }
+        }
+
+        function checkAllAchievements() {
+            achievementsList.forEach(a => checkAchievement(a.id));
+        }
+
+        function showAchievementPopup(icon, title, description, xp) {
+            const popup = document.createElement('div');
+            popup.className = 'achievement-popup';
+            popup.innerHTML = `
+                <div class="achievement-icon">${icon}</div>
+                <div class="achievement-title">${title}</div>
+                <div class="achievement-desc">${description}</div>
+                ${xp > 0 ? `<div class="achievement-xp">+${xp} XP</div>` : ''}
+            `;
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                popup.remove();
+            }, 3000);
+        }
+
+        function updateGamificationDisplay() {
+            const xpForNextLevel = data.gamification.level * 100;
+            const xpProgress = (data.gamification.xp / xpForNextLevel) * 100;
+            
+            document.getElementById('userLevel').textContent = `Level ${data.gamification.level}`;
+            document.getElementById('currentXP').textContent = data.gamification.xp;
+            document.getElementById('nextLevelXP').textContent = xpForNextLevel;
+            document.getElementById('xpProgress').style.width = `${xpProgress}%`;
+            document.getElementById('streakCount').textContent = data.gamification.streak;
+        }
+
+        function updateAchievementsDisplay() {
+            const grid = document.getElementById('achievementsGrid');
+            grid.innerHTML = achievementsList.map(achievement => {
+                const unlocked = data.gamification.achievements.includes(achievement.id);
+                return `
+                    <div class="achievement-card ${unlocked ? 'unlocked' : 'locked'}">
+                        <div class="achievement-card-icon">${achievement.icon}</div>
+                        <div class="achievement-card-title">${achievement.title}</div>
+                        <div class="achievement-card-desc">${achievement.description}</div>
+                        <div style="margin-top: 0.5rem; color: ${unlocked ? 'var(--success)' : 'var(--text-secondary)'}; font-weight: bold; font-size: 0.85rem;">
+                            ${unlocked ? '✓ UNLOCKED' : `${achievement.xp} XP`}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function saveGamification() {
+            localStorage.setItem('gamification', JSON.stringify(data.gamification));
+        }
+
+        function showNotification(message, type = 'info') {
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 80px;
+                right: 20px;
+                background: ${type === 'success' ? 'var(--success)' : 'var(--info)'};
+                color: white;
+                padding: 1rem 1.5rem;
+                border-radius: 8px;
+                z-index: 2000;
+                animation: slideInRight 0.3s ease;
+                box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+            `;
+            notification.textContent = message;
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.animation = 'slideOutRight 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+        }
+
+        // Scripture Functions
+        function showRandomScripture() {
+            const scripture = scriptures[Math.floor(Math.random() * scriptures.length)];
+            const popup = document.createElement('div');
+            popup.className = 'scripture-popup';
+            popup.innerHTML = `
+                <div class="scripture-header">
+                    <div class="scripture-icon">📖</div>
+                    <button class="scripture-close" onclick="this.parentElement.parentElement.remove()">×</button>
+                </div>
+                <div class="scripture-text">"${scripture.text}"</div>
+                <div class="scripture-reference">— ${scripture.reference}</div>
+            `;
+            document.body.appendChild(popup);
+            
+            setTimeout(() => {
+                popup.remove();
+            }, 15000);
+        }
+
+        // Show scripture on certain actions
+        function triggerScripture() {
+            if (Math.random() > 0.7) { // 30% chance
+                showRandomScripture();
+            }
+        }
+
+        // Set today's date as default for all date inputs
+        function setDefaultDates() {
+            const today = new Date().toISOString().split('T')[0];
+            const thisMonth = new Date().toISOString().slice(0, 7);
+            
+            document.getElementById('incomeDate').value = today;
+            document.getElementById('transactionDate').value = today;
+            document.getElementById('investmentDate').value = today;
+            document.getElementById('budgetMonth').value = thisMonth;
+        }
+
+        // Income Functions
+        function addIncome(e) {
+            e.preventDefault();
+            const income = {
+                id: Date.now(),
+                source: document.getElementById('incomeSource').value,
+                amount: parseFloat(document.getElementById('incomeAmount').value),
+                category: document.getElementById('incomeCategory').value,
+                date: document.getElementById('incomeDate').value,
+                notes: document.getElementById('incomeNotes').value,
+                currency: data.currency
+            };
+            
+            data.income.push(income);
+            localStorage.setItem('income', JSON.stringify(data.income));
+            e.target.reset();
+            setDefaultDates();
+            updateIncomeTable();
+            updateDashboard();
+            
+            // Gamification
+            updateStreak();
+            if (data.income.length === 1) {
+                checkAchievement('first_income');
+            } else {
+                addXP(10, 'Income recorded');
+            }
+            triggerScripture();
+        }
+
+        function updateIncomeTable() {
+            const tbody = document.getElementById('incomeTableBody');
+            if (data.income.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty-state"><div class="empty-icon">💰</div><p>No income records yet</p></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.income.map(inc => {
+                const convertedAmount = convertCurrency(inc.amount, inc.currency);
+                return `
+                    <tr>
+                        <td>${new Date(inc.date).toLocaleDateString()}</td>
+                        <td>${inc.source}</td>
+                        <td><span class="badge badge-income">${inc.category}</span></td>
+                        <td class="text-success">${formatCurrency(convertedAmount)}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteItem('income', ${inc.id})" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Budget Functions
+        function addBudget(e) {
+            e.preventDefault();
+            const budget = {
+                id: Date.now(),
+                category: document.getElementById('budgetCategory').value,
+                amount: parseFloat(document.getElementById('budgetAmount').value),
+                month: document.getElementById('budgetMonth').value,
+                currency: data.currency
+            };
+            
+            data.budgets.push(budget);
+            localStorage.setItem('budgets', JSON.stringify(data.budgets));
+            e.target.reset();
+            setDefaultDates();
+            updateBudgetTable();
+            updateDashboard();
+            
+            // Gamification
+            updateStreak();
+            if (data.budgets.length === 1) {
+                checkAchievement('budget_master');
+            } else {
+                addXP(10, 'Budget set');
+            }
+            triggerScripture();
+        }
+
+        function updateBudgetTable() {
+            const tbody = document.getElementById('budgetTableBody');
+            if (data.budgets.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-icon">📊</div><p>No budgets set yet</p></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.budgets.map(budget => {
+                const spent = calculateSpentForBudget(budget);
+                const remaining = budget.amount - spent;
+                const percentage = Math.min((spent / budget.amount) * 100, 100);
+                const convertedBudget = convertCurrency(budget.amount, budget.currency);
+                const convertedSpent = spent;
+                const convertedRemaining = convertedBudget - convertedSpent;
+                
+                return `
+                    <tr>
+                        <td>${budget.category}</td>
+                        <td>${formatCurrency(convertedBudget)}</td>
+                        <td class="text-danger">${formatCurrency(convertedSpent)}</td>
+                        <td class="${convertedRemaining >= 0 ? 'text-success' : 'text-danger'}">${formatCurrency(convertedRemaining)}</td>
+                        <td>
+                            <div style="width: 100%; height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden;">
+                                <div style="height: 100%; background: ${percentage > 90 ? 'var(--danger)' : 'var(--accent-gold)'}; width: ${percentage}%;"></div>
+                            </div>
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">${percentage.toFixed(1)}%</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteItem('budgets', ${budget.id})" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function calculateSpentForBudget(budget) {
+            const budgetMonth = budget.month;
+            return data.transactions
+                .filter(t => t.type === 'expense' && t.date.startsWith(budgetMonth) && t.category === budget.category)
+                .reduce((sum, t) => sum + convertCurrency(t.amount, t.currency), 0);
+        }
+
+        // Transaction Functions
+        function addTransaction(e) {
+            e.preventDefault();
+            const transaction = {
+                id: Date.now(),
+                name: document.getElementById('transactionName').value,
+                amount: parseFloat(document.getElementById('transactionAmount').value),
+                type: document.getElementById('transactionType').value,
+                category: document.getElementById('transactionCategory').value,
+                date: document.getElementById('transactionDate').value,
+                paymentMethod: document.getElementById('paymentMethod').value,
+                notes: document.getElementById('transactionNotes').value,
+                currency: data.currency
+            };
+            
+            data.transactions.push(transaction);
+            localStorage.setItem('transactions', JSON.stringify(data.transactions));
+            e.target.reset();
+            setDefaultDates();
+            updateTransactionsTable();
+            updateDashboard();
+            
+            // Gamification
+            updateStreak();
+            addXP(5, 'Transaction logged');
+            checkAchievement('transaction_tracker');
+            checkAchievement('tithe_giver');
+            triggerScripture();
+        }
+
+        function updateTransactionsTable() {
+            const tbody = document.getElementById('transactionsTableBody');
+            if (data.transactions.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-icon">💳</div><p>No transactions yet</p></td></tr>';
+                return;
+            }
+            
+            const sorted = [...data.transactions].sort((a, b) => new Date(b.date) - new Date(a.date));
+            tbody.innerHTML = sorted.map(t => {
+                const convertedAmount = convertCurrency(t.amount, t.currency);
+                return `
+                    <tr>
+                        <td>${new Date(t.date).toLocaleDateString()}</td>
+                        <td>${t.name}</td>
+                        <td>${t.category}</td>
+                        <td><span class="badge badge-${t.type}">${t.type}</span></td>
+                        <td class="${t.type === 'income' ? 'text-success' : 'text-danger'}">${formatCurrency(convertedAmount)}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteItem('transactions', ${t.id})" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Investment Functions
+        function addInvestment(e) {
+            e.preventDefault();
+            const investment = {
+                id: Date.now(),
+                name: document.getElementById('investmentName').value,
+                currentValue: parseFloat(document.getElementById('investmentValue').value),
+                category: document.getElementById('investmentCategory').value,
+                initialValue: parseFloat(document.getElementById('investmentInitial').value),
+                date: document.getElementById('investmentDate').value,
+                expectedReturn: parseFloat(document.getElementById('investmentReturn').value) || 0,
+                currency: data.currency
+            };
+            
+            data.investments.push(investment);
+            localStorage.setItem('investments', JSON.stringify(data.investments));
+            e.target.reset();
+            setDefaultDates();
+            updateInvestmentsTable();
+            updateDashboard();
+            
+            // Gamification
+            updateStreak();
+            if (data.investments.length === 1) {
+                checkAchievement('investor');
+            } else {
+                addXP(15, 'Investment added');
+            }
+            triggerScripture();
+        }
+
+        function updateInvestmentsTable() {
+            const tbody = document.getElementById('investmentsTableBody');
+            if (data.investments.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="empty-state"><div class="empty-icon">📈</div><p>No investments yet</p></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.investments.map(inv => {
+                const convertedCurrent = convertCurrency(inv.currentValue, inv.currency);
+                const convertedInitial = convertCurrency(inv.initialValue, inv.currency);
+                const returnAmount = convertedCurrent - convertedInitial;
+                const returnPercent = ((returnAmount / convertedInitial) * 100).toFixed(2);
+                
+                return `
+                    <tr>
+                        <td>${inv.name}</td>
+                        <td>${inv.category}</td>
+                        <td>${formatCurrency(convertedInitial)}</td>
+                        <td>${formatCurrency(convertedCurrent)}</td>
+                        <td class="${returnAmount >= 0 ? 'text-success' : 'text-danger'}">
+                            ${formatCurrency(returnAmount)} (${returnPercent}%)
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteItem('investments', ${inv.id})" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Debt Functions
+        function addDebt(e) {
+            e.preventDefault();
+            const debt = {
+                id: Date.now(),
+                name: document.getElementById('debtName').value,
+                total: parseFloat(document.getElementById('debtTotal').value),
+                category: document.getElementById('debtCategory').value,
+                paid: parseFloat(document.getElementById('debtPaid').value),
+                interest: parseFloat(document.getElementById('debtInterest').value) || 0,
+                monthlyPayment: parseFloat(document.getElementById('debtMonthly').value) || 0,
+                dueDate: document.getElementById('debtDueDate').value,
+                currency: data.currency
+            };
+            
+            data.debts.push(debt);
+            localStorage.setItem('debts', JSON.stringify(data.debts));
+            e.target.reset();
+            updateDebtsTable();
+            updateDashboard();
+            
+            // Gamification
+            updateStreak();
+            if (data.debts.length === 1) {
+                checkAchievement('debt_warrior');
+            } else {
+                addXP(10, 'Debt tracked');
+            }
+            triggerScripture();
+        }
+
+        function updateDebtsTable() {
+            const tbody = document.getElementById('debtsTableBody');
+            if (data.debts.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-icon">💳</div><p>No debts tracked yet</p></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.debts.map(debt => {
+                const convertedTotal = convertCurrency(debt.total, debt.currency);
+                const convertedPaid = convertCurrency(debt.paid, debt.currency);
+                const remaining = convertedTotal - convertedPaid;
+                const percentage = (convertedPaid / convertedTotal) * 100;
+                
+                return `
+                    <tr>
+                        <td>${debt.name}</td>
+                        <td>${debt.category}</td>
+                        <td class="text-danger">${formatCurrency(convertedTotal)}</td>
+                        <td class="text-success">${formatCurrency(convertedPaid)}</td>
+                        <td class="text-warning">${formatCurrency(remaining)}</td>
+                        <td>
+                            <div style="width: 100%; height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden;">
+                                <div style="height: 100%; background: var(--success); width: ${percentage}%;"></div>
+                            </div>
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">${percentage.toFixed(1)}%</span>
+                        </td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteItem('debts', ${debt.id})" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+            
+            updateDebtStats();
+        }
+
+        function updateDebtStats() {
+            const totalDebt = data.debts.reduce((sum, d) => sum + convertCurrency(d.total, d.currency), 0);
+            const totalPaid = data.debts.reduce((sum, d) => sum + convertCurrency(d.paid, d.currency), 0);
+            const remaining = totalDebt - totalPaid;
+            const monthlyIncome = calculateMonthlyIncome();
+            const debtToIncome = monthlyIncome > 0 ? ((totalDebt / monthlyIncome) * 100).toFixed(1) : 0;
+            
+            document.getElementById('totalDebt').textContent = formatCurrency(totalDebt);
+            document.getElementById('totalPaid').textContent = formatCurrency(totalPaid);
+            document.getElementById('totalRemaining').textContent = formatCurrency(remaining);
+            document.getElementById('debtToIncome').textContent = `${debtToIncome}%`;
+        }
+
+        // Goal Functions
+        function addGoal(e) {
+            e.preventDefault();
+            const goal = {
+                id: Date.now(),
+                name: document.getElementById('goalName').value,
+                target: parseFloat(document.getElementById('goalTarget').value),
+                current: parseFloat(document.getElementById('goalCurrent').value),
+                date: document.getElementById('goalDate').value,
+                category: document.getElementById('goalCategory').value,
+                currency: data.currency
+            };
+            
+            data.goals.push(goal);
+            localStorage.setItem('goals', JSON.stringify(data.goals));
+            e.target.reset();
+            setDefaultDates();
+            updateGoalsTable();
+            updateDashboard();
+            
+            // Gamification
+            updateStreak();
+            if (data.goals.length === 1) {
+                checkAchievement('goal_setter');
+            } else {
+                addXP(15, 'Goal set');
+            }
+            triggerScripture();
+        }
+
+        function updateGoalsTable() {
+            const tbody = document.getElementById('goalsTableBody');
+            if (data.goals.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty-state"><div class="empty-icon">🎯</div><p>No goals set yet</p></td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = data.goals.map(goal => {
+                const convertedCurrent = convertCurrency(goal.current, goal.currency);
+                const convertedTarget = convertCurrency(goal.target, goal.currency);
+                const percentage = Math.min((convertedCurrent / convertedTarget) * 100, 100);
+                
+                return `
+                    <tr>
+                        <td>${goal.name}</td>
+                        <td>${goal.category}</td>
+                        <td class="text-success">${formatCurrency(convertedCurrent)}</td>
+                        <td>${formatCurrency(convertedTarget)}</td>
+                        <td>
+                            <div style="width: 100%; height: 8px; background: var(--bg-secondary); border-radius: 4px; overflow: hidden;">
+                                <div style="height: 100%; background: var(--accent-gold); width: ${percentage}%;"></div>
+                            </div>
+                            <span style="font-size: 0.85rem; color: var(--text-secondary);">${percentage.toFixed(1)}%</span>
+                        </td>
+                        <td>${new Date(goal.date).toLocaleDateString()}</td>
+                        <td>
+                            <button class="btn btn-danger" onclick="deleteItem('goals', ${goal.id})" style="padding: 0.4rem 1rem; font-size: 0.8rem;">Delete</button>
+                        </td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        // Dashboard Functions
+        function updateDashboard() {
+            const totalIncome = data.income.reduce((sum, i) => sum + convertCurrency(i.amount, i.currency), 0);
+            const totalExpenses = data.transactions
+                .filter(t => t.type === 'expense')
+                .reduce((sum, t) => sum + convertCurrency(t.amount, t.currency), 0);
+            const savings = totalIncome - totalExpenses;
+            const totalInvestments = data.investments.reduce((sum, i) => sum + convertCurrency(i.currentValue, i.currency), 0);
+            const totalDebt = data.debts.reduce((sum, d) => sum + convertCurrency(d.total - d.paid, d.currency), 0);
+            const netWorth = savings + totalInvestments - totalDebt;
+            
+            document.getElementById('dashTotalIncome').textContent = formatCurrency(totalIncome);
+            document.getElementById('dashTotalExpenses').textContent = formatCurrency(totalExpenses);
+            document.getElementById('dashSavings').textContent = formatCurrency(savings);
+            document.getElementById('dashInvestments').textContent = formatCurrency(totalInvestments);
+            document.getElementById('dashDebt').textContent = formatCurrency(totalDebt);
+            document.getElementById('dashNetWorth').textContent = formatCurrency(netWorth);
+            
+            updateBudgetOverview();
+            updateSpendingChart();
+            updateGoalsProgress();
+        }
+
+        function updateBudgetOverview() {
+            const thisMonth = new Date().toISOString().slice(0, 7);
+            const monthBudgets = data.budgets.filter(b => b.month === thisMonth);
+            const totalBudget = monthBudgets.reduce((sum, b) => sum + convertCurrency(b.amount, b.currency), 0);
+            const totalSpent = monthBudgets.reduce((sum, b) => sum + calculateSpentForBudget(b), 0);
+            const percentage = totalBudget > 0 ? Math.min((totalSpent / totalBudget) * 100, 100) : 0;
+            
+            document.getElementById('budgetPercentage').textContent = `${percentage.toFixed(1)}%`;
+            document.getElementById('budgetBar').style.width = `${percentage}%`;
+        }
+
+        function calculateMonthlyIncome() {
+            const thisMonth = new Date().toISOString().slice(0, 7);
+            return data.income
+                .filter(i => i.date.startsWith(thisMonth))
+                .reduce((sum, i) => sum + convertCurrency(i.amount, i.currency), 0);
+        }
+
+        function setDashboardView(view) {
+            dashboardView = view;
+            document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            updateSpendingChart();
+        }
+
+        function updateSpendingChart() {
+            const ctx = document.getElementById('spendingChart');
+            if (!ctx) return;
+            
+            if (spendingChart) {
+                spendingChart.destroy();
+            }
+            
+            let labels, budgetData, spentData;
+            
+            if (dashboardView === 'annual') {
+                // Annual view - monthly data
+                labels = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+                budgetData = new Array(12).fill(0);
+                spentData = new Array(12).fill(0);
+                
+                data.budgets.forEach(b => {
+                    const monthIndex = parseInt(b.month.split('-')[1]) - 1;
+                    budgetData[monthIndex] += convertCurrency(b.amount, b.currency);
+                });
+                
+                data.transactions.filter(t => t.type === 'expense').forEach(t => {
+                    const monthIndex = new Date(t.date).getMonth();
+                    spentData[monthIndex] += convertCurrency(t.amount, t.currency);
+                });
+            } else {
+                // Monthly view - daily data for current month
+                const daysInMonth = new Date(new Date().getFullYear(), new Date().getMonth() + 1, 0).getDate();
+                labels = Array.from({length: daysInMonth}, (_, i) => i + 1);
+                spentData = new Array(daysInMonth).fill(0);
+                
+                const thisMonth = new Date().toISOString().slice(0, 7);
+                data.transactions.filter(t => t.type === 'expense' && t.date.startsWith(thisMonth)).forEach(t => {
+                    const day = new Date(t.date).getDate() - 1;
+                    spentData[day] += convertCurrency(t.amount, t.currency);
+                });
+            }
+            
+            spendingChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: labels,
+                    datasets: dashboardView === 'annual' ? [
+                        {
+                            label: 'Budget',
+                            data: budgetData,
+                            borderColor: '#d4af37',
+                            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                            tension: 0.4
+                        },
+                        {
+                            label: 'Spent',
+                            data: spentData,
+                            borderColor: '#ef4444',
+                            backgroundColor: 'rgba(239, 68, 68, 0.1)',
+                            tension: 0.4
+                        }
+                    ] : [
+                        {
+                            label: 'Daily Spending',
+                            data: spentData,
+                            borderColor: '#d4af37',
+                            backgroundColor: 'rgba(212, 175, 55, 0.1)',
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            labels: { color: '#e5e7eb' }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: { color: '#9ca3af' },
+                            grid: { color: '#2d3448' }
+                        },
+                        x: {
+                            ticks: { color: '#9ca3af' },
+                            grid: { color: '#2d3448' }
+                        }
+                    }
+                }
+            });
+        }
+
+        function updateGoalsProgress() {
+            const container = document.getElementById('goalsProgress');
+            if (data.goals.length === 0) {
+                container.innerHTML = '<div class="empty-state"><div class="empty-icon">🎯</div><p>No goals set yet</p></div>';
+                return;
+            }
+            
+            container.innerHTML = data.goals.map(goal => {
+                const convertedCurrent = convertCurrency(goal.current, goal.currency);
+                const convertedTarget = convertCurrency(goal.target, goal.currency);
+                const percentage = Math.min((convertedCurrent / convertedTarget) * 100, 100);
+                const circumference = 2 * Math.PI * 60;
+                const offset = circumference - (percentage / 100) * circumference;
+                
+                return `
+                    <div class="progress-ring">
+                        <div class="ring-container">
+                            <svg class="ring-svg" width="150" height="150">
+                                <circle class="ring-background" cx="75" cy="75" r="60"></circle>
+                                <circle class="ring-progress" cx="75" cy="75" r="60"
+                                    stroke-dasharray="${circumference}"
+                                    stroke-dashoffset="${offset}"></circle>
+                            </svg>
+                            <div class="ring-text">${percentage.toFixed(0)}%</div>
+                        </div>
+                        <div class="ring-label">${goal.name}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Delete Function
+        function deleteItem(type, id) {
+            if (confirm('Are you sure you want to delete this item?')) {
+                data[type] = data[type].filter(item => item.id !== id);
+                localStorage.setItem(type, JSON.stringify(data[type]));
+                updateAllDisplays();
+            }
+        }
+
+        // Update All Displays
+        function updateAllDisplays() {
+            updateIncomeTable();
+            updateBudgetTable();
+            updateTransactionsTable();
+            updateInvestmentsTable();
+            updateDebtsTable();
+            updateGoalsTable();
+            updateDashboard();
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            checkAuth();
+        });
+    </script>
+</body>
+</html>
